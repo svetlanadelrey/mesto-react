@@ -1,28 +1,11 @@
 import React from 'react';
 import api from '../utils/Api.js';
 import { Card } from './Card.js';
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-function Main(props) {
-    const [userName, setUserName] = React.useState('');
-    const [userDescription, setUserDescription] = React.useState('');
-    const [userAvatar, setUserAvatar] = React.useState('');
-    const [cards, setCards] = React.useState([]);
+function Main({cards, onEditAvatar, onEditProfile, onPlaceAdd, onCardClick}) {
 
-    React.useEffect(() => {
-      api.getCurrentUser()
-      .then((user) => {
-        setUserName(user.name);
-        setUserDescription(user.about);
-        setUserAvatar(user.avatar);
-      })
-      .catch(err => console.log(err));
-
-      api.getCards()
-      .then((cards) => {
-        setCards(cards);
-      })
-      .catch(err => console.log(err));
-    }, []);
+    const currentUser = React.useContext(CurrentUserContext);
 
     return (
         <main>
@@ -30,28 +13,28 @@ function Main(props) {
           <div className="avatar profile__avatar">
             <button 
               className="avatar__button" 
-              onClick={props.onEditAvatar} />
+              onClick={onEditAvatar} />
             <img
               className="avatar__image"
-              src={userAvatar}
+              src={currentUser.avatar}
               alt="Жак-Ив Кусто"
             />
           </div>
           <div className="profile__info">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{currentUser.name}</h1>
             <button
               className="profile__button-edit"
               type="button"
               aria-label="Редактировать профиль"
-              onClick={props.onEditProfile}
+              onClick={onEditProfile}
             />
-            <p className="profile__paragraph">{userDescription}</p>
+            <p className="profile__paragraph">{currentUser.about}</p>
           </div>
           <button
             className="profile__button-add"
             type="button"
             aria-label="Добавить фото"
-            onClick={props.onPlaceAdd}
+            onClick={onPlaceAdd}
           />
         </section>
         <section className="gallery" aria-label="Фотогалерея">
@@ -60,7 +43,7 @@ function Main(props) {
               <Card
                 key={card._id}
                 card={card}
-                onClick={props.onCardClick}
+                onClick={onCardClick}
               />
             )}
           </ul>
