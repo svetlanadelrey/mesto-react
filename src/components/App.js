@@ -48,6 +48,24 @@ function App() {
     setSelectedCard({});
   }
 
+  const handleCardLike = (card) => {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    api.changeLikeCardStatus(card._id, !isLiked)
+    .then((newCard) => {
+        setCards((state) => 
+        state.map((c) => c._id === card._id ? newCard : c));
+    });
+  }
+
+  const handleCardDelete = (card) => {
+    api.deleteCard(card._id)
+    .then(() => {
+      setCards((state) => 
+      state.filter((c) => c._id === !card._id));
+    })
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -58,6 +76,8 @@ function App() {
           onPlaceAdd={handleAddPlaceClick}
           onCardClick={handleCardClick}
           cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
         />
         <Footer />
         <PopupWithForm
