@@ -58,7 +58,8 @@ function App() {
     .then((newCard) => {
         setCards((state) => 
         state.map((c) => c._id === card._id ? newCard : c));
-    });
+    })
+    .catch(err => console.log(err));
   }
 
   const handleCardDelete = (card) => {
@@ -67,6 +68,7 @@ function App() {
       setCards((state) => 
       state.filter((c) => c._id !== card._id));
     })
+    .catch(err => console.log(err));
   }
 
   const handleUpdateUser = (user) => {
