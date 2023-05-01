@@ -1,8 +1,0 @@
-.view-image-popup__container {
-    background-color: transparent;
-    position: relative;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
