@@ -6,6 +6,7 @@ import { PopupWithForm } from './PopupWithForm';
 import { ImagePopup } from './ImagePopup';
 import api from '../utils/Api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { EditProfilePopup } from './EditProfilePopup';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -66,6 +67,15 @@ function App() {
     })
   }
 
+  const handleUpdateUser = (user) => {
+    api.editUserInfo(user)
+    .then((res) => {
+      setCurrentUser(res);
+      closeAllPopups();
+    })
+    .catch(err => console.log(err));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -80,34 +90,11 @@ function App() {
           onCardDelete={handleCardDelete}
         />
         <Footer />
-        <PopupWithForm
-          name={"popup_type_edit-profile"}
-          title={"Редактировать профиль"}
-          buttonText={"Сохранить"}
-          isOpen={isEditProfilePopupOpen}
+        <EditProfilePopup 
+          isOpen={isEditProfilePopupOpen} 
           onClose={closeAllPopups}
-        >
-          <input 
-            className="popup__input popup__input_type_name" 
-            type="text" 
-            name="name" 
-            placeholder="Имя" 
-            minLength={2} 
-            maxLength={40} 
-            required=""
-          />
-          <span className="input-error-name error"></span>
-          <input 
-            className="popup__input popup__input_type_job" 
-            type="text" 
-            name="job"
-            placeholder="О себе"
-            minLength={2}
-            maxLength={200}
-            required=""
-          />
-          <span className="input-error-job error"></span>
-        </PopupWithForm>
+          onUpdateUser={handleUpdateUser}
+        />
         <PopupWithForm
           name={'popup_type_add-card'}
           title={'Новое место'}
