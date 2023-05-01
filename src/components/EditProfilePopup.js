@@ -12,15 +12,15 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
     setDescription(currentUser.about);
   }, [currentUser])
 
-  function handleChangeName(e) {
+  const handleChangeName = (e) => {
     setName(e.target.value);
   }
 
-  function handleChangeDescription(e) {
+  const handleChangeDescription = (e) => {
     setDescription(e.target.value);
   }
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     onUpdateUser({
       name,
