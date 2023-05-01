@@ -2,8 +2,7 @@ import React from 'react';
 import { Card } from './Card.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-function Main({cards, onEditAvatar, onEditProfile, onPlaceAdd, onCardClick, onCardLike, onCardDelete}) {
-
+function Main({cards, onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete}) {
     const currentUser = React.useContext(CurrentUserContext);
 
     return (
@@ -33,7 +32,7 @@ function Main({cards, onEditAvatar, onEditProfile, onPlaceAdd, onCardClick, onCa
             className="profile__button-add"
             type="button"
             aria-label="Добавить фото"
-            onClick={onPlaceAdd}
+            onClick={onAddPlace}
           />
         </section>
         <section className="gallery" aria-label="Фотогалерея">
