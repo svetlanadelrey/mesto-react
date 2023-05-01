@@ -8,6 +8,7 @@ import api from '../utils/Api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { EditProfilePopup } from './EditProfilePopup';
 import { EditAvatarPopup } from './EditAvatarPopup';
+import { AddPlacePopup } from './AddPlacePopup';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -27,7 +28,7 @@ function App() {
         setCurrentUser(user);
       })
       .catch(err => console.log(err));
-  })
+  }, []);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -64,7 +65,7 @@ function App() {
     api.deleteCard(card._id)
     .then(() => {
       setCards((state) => 
-      state.filter((c) => c._id === !card._id));
+      state.filter((c) => c._id !== card._id));
     })
   }
 
@@ -77,10 +78,19 @@ function App() {
     .catch(err => console.log(err));
   }
 
-  const handleUpdateAvatar = (user) => {
-    api.updateAvatar(user)
+  const handleUpdateAvatar = (link) => {
+    api.updateAvatar(link)
     .then((res) => {
       setCurrentUser(res);
+      closeAllPopups();
+    })
+    .catch(err => console.log(err));
+  }
+
+  const handleAddPlaceSubmit = (card) => {
+    api.addCard(card)
+    .then((newCard) => {
+      setCards([newCard, ...cards]);
       closeAllPopups();
     })
     .catch(err => console.log(err));
@@ -93,7 +103,7 @@ function App() {
         <Main
           onEditAvatar={handleEditAvatarClick}
           onEditProfile={handleEditProfileClick}
-          onPlaceAdd={handleAddPlaceClick}
+          onAddPlace={handleAddPlaceClick}
           onCardClick={handleCardClick}
           cards={cards}
           onCardLike={handleCardLike}
@@ -110,39 +120,17 @@ function App() {
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
         />
-        <PopupWithForm
-          name={'popup_type_add-card'}
-          title={'Новое место'}
-          buttonText={'Создать'}
-          isOpen={isAddPlacePopupOpen}
+        <AddPlacePopup 
+          isOpen={isAddPlacePopupOpen} 
           onClose={closeAllPopups}
-        >
-          <input
-            className="popup__input popup__input_type_place"
-            type="text"
-            name="place"
-            placeholder="Название"
-            minLength={2}
-            maxLength={30}
-            required=""
-          />
-          <span className="input-error-place error" />
-          <input
-            className="popup__input popup__input_type_link"
-            type="url"
-            name="link"
-            placeholder="Ссылка на картинку"
-            required=""
-          />
-          <span className="input-error-link error" />
-        </PopupWithForm>
+          onAddPlace={handleAddPlaceSubmit}
+        />
         <PopupWithForm
           name={'popup_type_confirm'}
           title={'Вы уверены?'}
           buttonText={'Да'}
           onClose={closeAllPopups}
-        >
-        </PopupWithForm>
+        />
         <ImagePopup
           card={selectedCard}
           onClose={closeAllPopups}

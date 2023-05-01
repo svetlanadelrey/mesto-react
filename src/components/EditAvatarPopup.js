@@ -9,6 +9,7 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar}) {
         onUpdateAvatar({
           avatar: editAvatarRef.current.value,
         });
+        editAvatarRef.current.value = null;
       }
 
     return (
